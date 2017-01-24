@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Mock Admin</title>
+<link rel="stylesheet" href="src/css/main.css" />
+</head>
+<body class="skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="#" class="logo">
+                <span class="logo-mini">CM</span>
+                <span class="logo-lg">Config and Mock</span>
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="sidebar-menu">
+                    <li class="header">Menu</li>
+                    <li>
+                        <a target="mainFrame" href="ftl-mock.html">
+                            <i class="fa fa-circle-o"></i> <span>ftl-mock</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a target="mainFrame" href="url-route.html">
+                            <i class="fa fa-circle-o"></i> <span>url-route</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a target="mainFrame" href="ajax-proxy.html">
+                            <i class="fa fa-circle-o"></i> <span>ajax-proxy</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <iframe src="ftl-mock.html" id="mainFrame" name="mainFrame" style="width:100%;min-height:500px;" scrolling="auto" frameborder="0"></iframe>
+        </div>
+    </div>
+<script src="src/js/base.js"></script>
+<script src="src/js/main.js"></script>
+<script>
+(function(){
+    var $height = $('#mainFrame,.content-wrapper'), t;
+    var reHeight = function(){
+        $height.height(window.innerHeight - 50);
+    };
+    window.addEventListener('resize', function(){
+        clearTimeout(t);
+        t = setTimeout(function(){
+            reHeight();
+        },500)
+    });
+    reHeight();
+}());
+</script>
+</body>
+</html>
