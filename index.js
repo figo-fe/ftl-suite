@@ -132,7 +132,7 @@ var server = http.createServer(function(req, res){
 
 console.log('==============================\n'+
     'fsconfig.json created,\n'+
-    'you can edit it directly or browse "/mockadmin/"'+
+    'You can edit it directly or visit "http://127.0.0.1:'+ port +'/mockadmin/"'+
     '\n==============================');
 
 console.log(('Service started at 127.0.0.1:' + port + '...').cyan);
