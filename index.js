@@ -37,8 +37,13 @@ var bodyParse = function(req, fn){
         fn && fn(ret);
     });
 };
-
 fs.existsSync(configPath) || fs.writeFile(configPath, JSON.stringify(defaultCfg, null, 4));
+
+try{
+    fs.mkdirSync(path.join(rootPath, 'mock'));
+    fs.mkdirSync(path.join(rootPath, 'mock','data'));
+    fs.mkdirSync(path.join(rootPath, 'mock','ajax'));
+}catch(e){}
 
 var server = http.createServer(function(req, res){
     var urlpath = url.parse(req.url).path;
@@ -121,8 +126,13 @@ var server = http.createServer(function(req, res){
     }else{
         // render freemarker
         var ftl = pathname.replace(/\.html?$/,'.ftl');
-        fs.readFile(path.join(rootPath, 'mock/data', ftl), {encoding:'utf8'}, function(err, data){
-            var ftlData = err ? {} : JSON.parse(data);
+        fs.readFile(path.join(rootPath, 'mock/data', ftl.replace(/\.ftl$/,'.json')), {encoding:'utf8'}, function(err, data){
+            var ftlData = err ? {} : data;
+            try{
+                ftlData = JSON.parse(ftlData);
+            }catch(e){
+                ftlData = {};
+            };
             fm.render(ftl, ftlData, function (err, data, out){
                 res.end(err ? out : data);
             });

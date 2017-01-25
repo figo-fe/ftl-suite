@@ -76,6 +76,17 @@ URL Rewrite map, E.g.
 
 **You can edit all configurations by visiting http://127.0.0.1/mockadmin/**
 
+## Rendering
+When you visit an URL in browser, the service will find the appropriate FTL, rendering from a json file in the same path in "mock/data".
+
+E.g.
+
+```
+visit: /main/index.html
+ftl: /ftl/main/index.ftl
+data: /mock/data/main/index.json
+```
+
 ## Note
 1. Prefixed with "static|src|mock|html?|tools?" will return static files
 2. To avoid errors, it is recommended to use the "mockadmin" to edit configuration
