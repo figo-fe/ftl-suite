@@ -9,8 +9,8 @@
     <div class="wrapper">
         <header class="main-header">
             <a href="#" class="logo">
-                <span class="logo-mini">CM</span>
-                <span class="logo-lg">Config and Mock</span>
+                <span class="logo-mini">MA</span>
+                <span class="logo-lg">Mock Admink</span>
             </a>
             <nav class="navbar navbar-static-top">
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
@@ -20,28 +20,28 @@
         </header>
         <aside class="main-sidebar">
             <section class="sidebar">
-                <ul class="sidebar-menu">
+                <ul class="sidebar-menu" id="menuList">
                     <li class="header">Menu</li>
-                    <li>
-                        <a target="mainFrame" href="ftl-mock.html">
-                            <i class="fa fa-circle-o"></i> <span>ftl-mock</span>
+                    <li class="active">
+                        <a target="mainFrame" href="json-edit.html">
+                            <i class="fa fa-circle-o"></i> <span>JSON-Edit</span>
                         </a>
                     </li>
                     <li>
                         <a target="mainFrame" href="url-route.html">
-                            <i class="fa fa-circle-o"></i> <span>url-route</span>
+                            <i class="fa fa-circle-o"></i> <span>URL-Route</span>
                         </a>
                     </li>
                     <li>
-                        <a target="mainFrame" href="ajax-proxy.html">
-                            <i class="fa fa-circle-o"></i> <span>ajax-proxy</span>
+                        <a target="mainFrame" href="ajax-remote.html">
+                            <i class="fa fa-circle-o"></i> <span>AJAX-Remote</span>
                         </a>
                     </li>
                 </ul>
             </section>
         </aside>
         <div class="content-wrapper">
-            <iframe src="ftl-mock.html" id="mainFrame" name="mainFrame" style="width:100%;min-height:500px;" scrolling="auto" frameborder="0"></iframe>
+            <iframe src="json-edit.html" id="mainFrame" name="mainFrame" style="width:100%;min-height:500px;" scrolling="auto" frameborder="0"></iframe>
         </div>
     </div>
 <script src="src/js/base.js"></script>
@@ -59,6 +59,10 @@
         },500)
     });
     reHeight();
+    $('#menuList li').on('click', function(){
+        $('#menuList li').removeClass('active');
+        this.className = 'active';
+    });
 }());
 </script>
 </body>

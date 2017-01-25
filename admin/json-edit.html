@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JSON-Edit</title>
+<link rel="stylesheet" href="src/css/main.css" />
+<link rel="stylesheet" href="src/css/jsoneditor.min.css" />
+</head>
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+    <div class="content-wrapper content-inner">
+        <section class="content-header">
+            <h1>JSON-Edit<small>Edit ftl or ajax mock data, and also fsconfig.json</small></h1>
+        </section>
+        <div class="content">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <div class="input-group form-group">
+                        <div class="input-group-addon selin">
+                            <select id="select">
+                                <option value="custom">custom</option>
+                                <option value="config">config</option>
+                            </select>
+                        </div>
+                        <input type="text" id="jsonUrl" class="form-control" placeholder="Enter file path (e.g. /mock/data/index.json)" />
+                        <div class="input-group-btn">
+                            <button type="button" id="load" class="btn btn-primary">load</button>
+                        </div>
+                    </div>
+                    <div id="jsoneditor"></div>
+                </div>
+                <div class="box-footer">
+                    <button type="button" id="save" class="btn btn-success">save</button>
+                    <button type="button" id="clear" class="btn btn-primary">clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="src/js/base.js"></script>
+<script src="src/js/main.js"></script>
+<script src="src/js/jsoneditor.min.js"></script>
+<script>
+var container = document.getElementById('jsoneditor');
+var options = {
+    mode: 'tree',
+    modes: ['code', 'form', 'text', 'tree'], // allowed modes
+    error: function (err) {
+        alert(err.toString());
+    }
+};
+var editor = new JSONEditor(container,options);
+$('#load').on('click', function(){
+    $.get(jsonUrl.value, function(data){
+        editor.set(data);
+    });
+});
+$('#clear').on('click', function(){
+    editor.set({});
+});
+$('#save').on('click', function(){
+    var cont = JSON.stringify(editor.get());
+    if(!jsonUrl.value){
+        alert('Path is empty!');
+        return
+    }
+    $.post('/fsapi/savefile',{
+        path: jsonUrl.value,
+        cont: cont
+    }, function(res){
+        alert(res.msg);
+    });
+});
+$('#select').on('change',function(){
+    switch(this.value){
+        case 'config':
+            jsonUrl.value = '/fsconfig.json';
+            $('#load').trigger('click');
+            break;
+        case 'custom':
+            jsonUrl.value = '';
+            editor.set({});
+            break;
+    }
+});
+</script>
+</body>
+</html>

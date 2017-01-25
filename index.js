@@ -3,8 +3,9 @@ var url = require('url');
 var fs = require('fs');
 var path = require('path');
 var colors = require('colors');
+var qs = require("querystring");
 var rootPath = process.cwd();
-var configPath = path.join(rootPath, 'config.json');
+var configPath = path.join(rootPath, 'fsconfig.json');
 var Freemarker = require('freemarker.js');
 var httphelper = require('./lib/httphelper');
 var readstatic = require('./lib/readstatic');
@@ -16,6 +17,25 @@ var defaultCfg = {
     proxyPre: '',
     proxyArr: [],
     route: {}
+};
+
+var bodyParse = function(req, fn){
+    var arr = [];
+    req.on('data', function(data){
+        arr.push(data);
+    });
+    req.on('end', function(){
+        var data = Buffer.concat(arr).toString(),ret;
+        try{
+            ret = qs.parse(data);
+        }catch(err){
+            ret = {
+                code: 500,
+                msg: 'post data error'
+            }
+        }
+        fn && fn(ret);
+    });
 };
 
 fs.existsSync(configPath) || fs.writeFile(configPath, JSON.stringify(defaultCfg, null, 4));
@@ -35,15 +55,32 @@ var server = http.createServer(function(req, res){
         }
     }
 
+    // ftl-suite api
+    if(pathname.indexOf('/fsapi/') == 0 && req.method == 'POST'){
+        buffer = '';
+        switch(pathname){
+            case '/fsapi/savefile':
+                bodyParse(req, function(body){
+                    fs.writeFile(path.join(rootPath, body.path), body.cont, function(err, data){
+                        res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
+                        res.write(err ? '{"code":500,"msg":"'+ String(err) +'"}' : '{"code":200,"msg":"success"}');
+                        res.end();
+                    });
+                });
+                break;
+        }
+        return;
+    }
+
     // remote
     if(config.proxyPre && new RegExp('^\/'+ config.proxyPre +'\/').test(pathname) || config.proxyArr.indexOf(pathname) >= 0){
         if(!config.remoteHost){
-            res.end('remoteHost is not set in config.json');
+            res.end('remoteHost is not set in fsconfig.json');
         }
         if(req.method == 'GET'){
             httphelper.get(config.remoteHost  + urlpath, 5000, function (err, data){
                 if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
-                    res.writeHead(200, {'Content-type' : 'application/json; charset=UTF-8'});
+                    res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
                 }
                 res.end(err ? 'server error' : data);
             }, 'utf-8' ,{
@@ -51,6 +88,7 @@ var server = http.createServer(function(req, res){
                 'Cookie': req.headers.cookie || ''
             });
         }else{
+            buffer = '';
             req.on('data',function(rawData){
                 buffer += rawData;
             });
@@ -64,7 +102,7 @@ var server = http.createServer(function(req, res){
                     return data;
                 }()), function (err, data){
                     if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
-                        res.writeHead(200, {'Content-type' : 'application/json; charset=UTF-8'});
+                        res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
                     }
                     res.end(err ? 'server error' : data);
                 }, 'utf-8' ,{
@@ -79,7 +117,7 @@ var server = http.createServer(function(req, res){
     // local
     /\/$/.test(pathname) && (pathname += 'index.html');
 
-    if(/^\/(static|src|mock|html?|tools?|mockadmin)\//.test(pathname)){
+    if(/^\/(static|src|mock|html?|tools?|mockadmin)\//.test(pathname) || pathname == '/fsconfig.json'){
         if(pathname.indexOf('/mockadmin/') == 0){
             realPath = path.join(__dirname, 'admin', pathname.replace(/^\/mockadmin\//, ''));
         }else{
@@ -102,7 +140,7 @@ var server = http.createServer(function(req, res){
 });
 
 console.log('==============================\n'+
-    'config.json created,\n'+
+    'fsconfig.json created,\n'+
     'you can edit it directly or browse "/mockadmin/"'+
     '\n==============================');
 

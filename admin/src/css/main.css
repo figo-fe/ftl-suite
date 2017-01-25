@@ -28,3 +28,6 @@ html,body{min-height:100%}.layout-boxed html,.layout-boxed body{height:100%}body
 .content-inner{
 	margin-left:0;
 }
+.selin{
+    padding: 4px 10px;
+}
