@@ -6,13 +6,26 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "xnfigo@gmail.com",
-  "license": "ISC",
+  "author": "23335628@qq.com",
+  "license": "MIT",
   "dependencies": {
     "bufferhelper": "^0.2.1",
     "colors": "^1.1.2",
     "freemarker.js": "^1.2.2",
-    "grunt-contrib-connect": "^1.0.2",
     "iconv-lite": "^0.4.15"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/figo-fe/ftl-suite.git"
+  },
+  "keywords": [
+    "freemarker",
+    "ftl",
+    "ftl-suite"
+  ],
+  "bugs": {
+    "url": "https://github.com/figo-fe/ftl-suite/issues"
+  },
+  "homepage": "https://github.com/figo-fe/ftl-suite#readme"
 }
