@@ -3,7 +3,7 @@
 
 ## How to use, only 3 steps:
 1. Make sure Java is installed on your machine (version 1.4 or later)
-2. Install ftl-suite `npm install ftl-suite --save`
+2. Install ftl-suite `npm install ftl-suite --save-dev`
 3. Start services `[PORT=80] node node_modules/ftl-suite`
 
 ## Feature
@@ -74,7 +74,7 @@ URL Rewrite map, E.g.
 }
 ```
 
-**You can edit all configurations by visiting http://localhost/mockadmin/**
+**You can edit all configurations by visiting http://127.0.0.1/mockadmin/**
 
 ## Note
 1. Prefixed with "static|src|mock|html?|tools?" will return static files
