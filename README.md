@@ -52,6 +52,7 @@ Prefix of proxy URL, E.g.
 single:
 api => /api/xxx/xxx
 ajax => /ajax/xxx/xxx
+
 multiple:
 (api|ajax) => /(api|ajax)/xxx/xxx
 ```
