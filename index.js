@@ -46,7 +46,7 @@ var server = http.createServer(function(req, res){
     var config = JSON.parse(fs.readFileSync(configPath, {encoding:'utf8'}));
     var fm = new Freemarker({viewRoot: path.join(rootPath, config.ftlRoot)});
     var route = config.route;
-    var realPath, buffer;
+    var remoteHost = config.remoteHost, realPath;
 
     for(var key in route){
         if(urlpath.indexOf(key) == 0){
@@ -57,7 +57,6 @@ var server = http.createServer(function(req, res){
 
     // ftl-suite api
     if(pathname.indexOf('/fsapi/') == 0 && req.method == 'POST'){
-        buffer = '';
         switch(pathname){
             case '/fsapi/savefile':
                 bodyParse(req, function(body){
@@ -74,11 +73,14 @@ var server = http.createServer(function(req, res){
 
     // remote
     if(config.proxyPre && new RegExp('^\/'+ config.proxyPre +'\/').test(pathname) || config.proxyArr.indexOf(pathname) >= 0){
-        if(!config.remoteHost){
-            res.end('remoteHost is not set in fsconfig.json');
+        if(!remoteHost){
+            res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
+            res.end('{"code":500,"msg":"remoteHost is not set in fsconfig.json"}');
         }
+        remoteHost = remoteHost.indexOf('http') == 0 ? remoteHost : ('http://' + remoteHost);
+
         if(req.method == 'GET'){
-            httphelper.get(config.remoteHost  + urlpath, 5000, function (err, data){
+            httphelper.get(remoteHost  + urlpath, 5000, function (err, data){
                 if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
                     res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
                 }
@@ -88,19 +90,8 @@ var server = http.createServer(function(req, res){
                 'Cookie': req.headers.cookie || ''
             });
         }else{
-            buffer = '';
-            req.on('data',function(rawData){
-                buffer += rawData;
-            });
-            req.on('end', function(){
-                httphelper.post(config.remoteHost  + urlpath, 10000, (function(){
-                    var data = {};
-                    buffer.split('&').forEach(function(kv){
-                        kv = kv.split('=');
-                        data[kv[0]] = kv[1];
-                    });
-                    return data;
-                }()), function (err, data){
+            bodyParse(req, function(postData){
+                httphelper.post(remoteHost  + urlpath, 10000, postData, function (err, data){
                     if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
                         res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
                     }
