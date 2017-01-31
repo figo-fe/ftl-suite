@@ -1,4 +1,4 @@
-#Freemarker Develop Suite (ftl-suite)
+#Freemarker Development Suite (ftl-suite)
 > Make front-end freemarker template developing efficiently and conveniently
 
 ## How to use, only 3 steps:
