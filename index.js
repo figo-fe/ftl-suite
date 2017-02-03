@@ -14,8 +14,8 @@ var port = process.env.PORT || 9090;
 var defaultCfg = {
     ftlRoot: 'ftl',
     remoteHost: '',
-    proxyPre: '',
-    proxyArr: [],
+    proxyPrefix: '',
+    proxyList: [],
     route: {}
 };
 
@@ -83,7 +83,7 @@ var server = http.createServer(function(req, res){
     }
 
     // remote
-    if(config.proxyPre && new RegExp('^\/'+ config.proxyPre +'\/').test(pathname) || config.proxyArr.indexOf(pathname) >= 0){
+    if(config.proxyPrefix && new RegExp('^\/'+ config.proxyPrefix +'\/').test(pathname) || config.proxyList.indexOf(pathname) >= 0){
         if(!remoteHost){
             res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
             res.end('{"code":500,"msg":"remoteHost is not set in fsconfig.json"}');

@@ -1,14 +1,14 @@
 #Freemarker Development Suite (ftl-suite)
-> Make front-end freemarker template developing efficiently and conveniently
+> Make freemarker development efficiently and conveniently
 
-## How to use, only 3 steps:
+## How to use? Only 3 steps!
 1. Make sure Java is installed on your machine (version 1.4 or later)
 2. Install ftl-suite `npm install ftl-suite --save-dev`
 3. Start services `[PORT=80] node node_modules/ftl-suite`
 
 ## Feature
-1. Render ftl files in local server without IDE
-2. According to the interface document mock data, parallel development with back-end
+1. Render FTLs in local server without IDE
+2. Analog data based on interface documentation, parallel development with back-end
 3. Proxy Ajax to the remote server
 4. URL Rewrite
 5. Restore the online environment perfectly
@@ -28,7 +28,7 @@ Default config:
 ```
 
 ### ftlRoot
-freemarker root folder, E.g.
+freemarker root folder, e.g.
 ```
 ftl
 ../main/ftl
@@ -36,7 +36,7 @@ ftl
 ```
 
 ### remoteHost
-Ajax remote server, Support URL and IP, E.g.
+Ajax remote server, Support URL and IP, e.g.
 ```
 xx.com
 http://xx.com
@@ -46,8 +46,8 @@ http://123.123.123.123
 ....
 ```
 
-### proxyPre
-Prefix of proxy URL, E.g.
+### proxyPrefix
+Prefix of proxy URL, e.g.
 ```
 single:
 api => /api/xxx/xxx
@@ -57,8 +57,8 @@ multiple:
 (api|ajax) => /(api|ajax)/xxx/xxx
 ```
 
-### proxyArr
-Customize URLs need to proxy, E.g.
+### proxyList
+Customize URLs need to proxy, e.g.
 ```
 [
     "/api/login/info",
@@ -67,7 +67,7 @@ Customize URLs need to proxy, E.g.
 ```
 
 ### route
-URL Rewrite map, E.g.
+URL Rewrite map, e.g.
 ```
 {
     "/user/home": "/html/user/home/main.html"
@@ -79,7 +79,7 @@ URL Rewrite map, E.g.
 ## Rendering
 When you visit an URL in browser, the service will find the appropriate FTL, rendering from a json file in the same path in "mock/data".
 
-E.g.
+e.g.
 
 ```
 visit: /main/index.html
@@ -87,10 +87,11 @@ ftl: /ftl/main/index.ftl
 data: /mock/data/main/index.json
 ```
 
-## Note
+Note:
+
 1. Prefixed with "static|src|mock|html?|tools?" will return static files
 2. To avoid errors, it is recommended to use the "mockadmin" to edit configuration
-3. You can find more surprise in index.js
+3. Create Date Model like this: "2017-01-01 00:00:00**?dt**"
 
 ## MIT License
 
