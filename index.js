@@ -3,7 +3,8 @@ var url = require('url');
 var fs = require('fs');
 var path = require('path');
 var colors = require('colors');
-var qs = require("querystring");
+var qs = require('querystring');
+var objExtend = require('extend');
 var rootPath = process.cwd();
 var configPath = path.join(rootPath, 'fsconfig.json');
 var Freemarker = require('./freemarker');
@@ -16,7 +17,8 @@ var defaultCfg = {
     remoteHost: '',
     proxyPrefix: '',
     proxyList: [],
-    route: {}
+    route: {},
+    globalData: {}
 };
 
 var bodyParse = function(req, fn){
@@ -139,13 +141,16 @@ var server = http.createServer(function(req, res){
             }catch(e){
                 ftlData = {};
             };
-            fm.render(ftl, ftlData, function (err, data, out){
+            fm.render(ftl, objExtend(config.globalData, ftlData), function (err, data, out){
                 res.end(err ? out : data);
             });
         });
     }
 });
 
-console.log(('Service started at 127.0.0.1:' + port + '...').cyan);
+console.log(('Started server on http://127.0.0.1:' + port + '...').cyan);
 
 server.listen(port, '127.0.0.1');
+server.on('error', function(err){
+    console.log(err.toString().red);
+});
