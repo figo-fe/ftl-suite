@@ -6,7 +6,7 @@ var colors = require('colors');
 var qs = require("querystring");
 var rootPath = process.cwd();
 var configPath = path.join(rootPath, 'fsconfig.json');
-var Freemarker = require('freemarker.js');
+var Freemarker = require('./freemarker');
 var httphelper = require('./lib/httphelper');
 var readstatic = require('./lib/readstatic');
 var port = process.env.PORT || 9090;
@@ -58,6 +58,12 @@ var server = http.createServer(function(req, res){
             pathname = route[key];
             break;
         }
+    }
+
+    // fix favicon.ico request
+    if(pathname == '/favicon.ico'){
+        res.end('');
+        return;
     }
 
     // ftl-suite api
@@ -139,11 +145,6 @@ var server = http.createServer(function(req, res){
         });
     }
 });
-
-console.log('==============================\n'+
-    'fsconfig.json created,\n'+
-    'You can edit it directly or visit "http://127.0.0.1:'+ port +'/mockadmin/"'+
-    '\n==============================');
 
 console.log(('Service started at 127.0.0.1:' + port + '...').cyan);
 
