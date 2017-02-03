@@ -1,6 +1,6 @@
 {
   "name": "ftl-suite",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Enjoying Freemarker Development",
   "main": "index.js",
   "scripts": {
@@ -10,12 +10,11 @@
   "license": "MIT",
   "dependencies": {
     "bufferhelper": "^0.2.1",
-    "iconv-lite": "^0.4.15"
-  },
-  "devDependencies": {
     "colors": "^1.1.2",
+    "iconv-lite": "^0.4.15",
     "node-uuid": "^1.4.7"
   },
+  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/figo-fe/ftl-suite.git"
