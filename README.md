@@ -21,9 +21,10 @@ Default config:
 {
     ftlRoot: 'ftl',
     remoteHost: '',
-    proxyPre: '',
-    proxyArr: [],
-    route: {}
+    proxyPrefix: '',
+    proxyList: [],
+    route: {},
+    globalData: {}
 }
 ```
 
@@ -91,7 +92,7 @@ Note:
 
 1. Prefixed with "static|src|mock|html?|tools?" will return static files
 2. To avoid errors, it is recommended to use the "mockadmin" to edit configuration
-3. Create Date Model like this: "2017-01-01 00:00:00**?dt**"
+3. Create Date Model like: "2017-01-01 00:00:00?dt"
 
 ## MIT License
 
