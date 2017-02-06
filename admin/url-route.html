@@ -64,15 +64,21 @@ $('#add').on('click',function(){
 });
 
 $('#save').on('click', function(){
-    var data = {}, cont;
+    var data = {}, cont, urlErr;
     $list.find('tr').each(function(){
         var $input = $(this).find('input');
         var url = $input[0].value;
         var origin = $input[1].value;
-        if(url && origin){
+        if(url == '/'){
+            urlErr = true;
+        }else if(url && origin){
             data[url] = origin;
         }
     });
+    if(urlErr){
+        alert('URL can\'t be "/", you should input "/index.html"');
+        return;
+    }
     fsconfig.route = data;
     if(confirm('Confirm the following data:\n' + JSON.stringify(data, null, 4))){
         $.post('/fsapi/savefile',{

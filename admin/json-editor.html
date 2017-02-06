@@ -11,7 +11,7 @@
 <div class="wrapper">
     <div class="content-wrapper content-inner">
         <section class="content-header">
-            <h1>JSON-Edit<small>Edit ftl or ajax mock data, and also fsconfig.json</small></h1>
+            <h1>JSON-Editor<small>Edit ftl or ajax mock data, and also fsconfig.json</small></h1>
         </section>
         <div class="content">
             <div class="box box-primary">
@@ -48,7 +48,7 @@ var getJson = function(path){
     $.get(path, function(data){
         editor.set(data);
     }).error(function(){
-        alert('Error. Please check the path');
+        editor.set({});
     });
 };
 

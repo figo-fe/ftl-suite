@@ -56,8 +56,10 @@ var server = http.createServer(function(req, res){
     var route = config.route;
     var remoteHost = config.remoteHost, realPath;
 
+    /\/$/.test(pathname) && (pathname += 'index.html');
+
     for(var key in route){
-        if(urlpath.indexOf(key) == 0){
+        if(pathname.indexOf(key) == 0){
             pathname = route[key];
             break;
         }
@@ -134,8 +136,6 @@ var server = http.createServer(function(req, res){
     }
 
     // local
-    /\/$/.test(pathname) && (pathname += 'index.html');
-
     if(/^\/(static|src|mock|html?|tools?|mockadmin)\//.test(pathname) || pathname == '/fsconfig.json'){
         if(pathname.indexOf('/mockadmin/') == 0){
             realPath = path.join(__dirname, 'admin', pathname.replace(/^\/mockadmin\//, ''));
