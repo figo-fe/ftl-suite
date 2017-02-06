@@ -57,7 +57,7 @@ $('#clear').on('click', function(){
 });
 
 $('#save').on('click', function(){
-    var cont = JSON.stringify(editor.get());
+    var cont = JSON.stringify(editor.get(), null, 4);
     if(!jsonFile.value){
         alert('Path is empty!');
         return
