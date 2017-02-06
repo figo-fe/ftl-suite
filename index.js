@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var colors = require('colors');
 var qs = require('querystring');
+var glob = require('glob');
 var objExtend = require('extend');
 var rootPath = process.cwd();
 var configPath = path.join(rootPath, 'fsconfig.json');
@@ -69,16 +70,30 @@ var server = http.createServer(function(req, res){
     }
 
     // ftl-suite api
-    if(pathname.indexOf('/fsapi/') == 0 && req.method == 'POST'){
+    if(pathname.indexOf('/fsapi/') == 0){
+        res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
         switch(pathname){
             case '/fsapi/savefile':
                 bodyParse(req, function(body){
                     fs.writeFile(path.join(rootPath, body.path), body.cont, function(err, data){
-                        res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
-                        res.write(err ? '{"code":500,"msg":"'+ String(err) +'"}' : '{"code":200,"msg":"success"}');
-                        res.end();
+                        res.end(err ? '{"code":500,"msg":"'+ String(err) +'"}' : '{"code":200,"msg":"success"}');
                     });
                 });
+                break;
+            case '/fsapi/filelist':
+                (function(){
+                    var rootDir = urlpath.match(/dir=([^&]+)/)[1];
+                    glob('**/*.json',{
+                        cwd: path.join(rootPath, rootDir),
+                        nodir: true
+                    }, function(err, files){
+                        res.end(err ? '{"code":500,"msg":"'+ String(err) +'"}' : JSON.stringify({
+                            code: 200,
+                            msg: 'success',
+                            data: files
+                        }));
+                    })
+                }());
                 break;
         }
         return;

@@ -6,19 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "23335628@qq.com",
+  "author": {
+    "name": "23335628@qq.com"
+  },
   "license": "MIT",
   "dependencies": {
     "bufferhelper": "^0.2.1",
     "colors": "^1.1.2",
     "extend": "^3.0.0",
+    "glob": "^7.1.1",
     "iconv-lite": "^0.4.15",
     "node-uuid": "^1.4.7"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/figo-fe/ftl-suite.git"
+    "url": "git+https://github.com/figo-fe/ftl-suite.git"
   },
   "keywords": [
     "freemarker",
@@ -28,5 +30,11 @@
   "bugs": {
     "url": "https://github.com/figo-fe/ftl-suite/issues"
   },
-  "homepage": "https://github.com/figo-fe/ftl-suite#readme"
+  "homepage": "https://github.com/figo-fe/ftl-suite#readme",
+  "readme": "#Freemarker Development Suite (ftl-suite)\r\n> Make freemarker development efficiently and conveniently\r\n\r\n## How to use? Only 3 steps!\r\n1. Make sure Java is installed on your machine (version 1.4 or later)\r\n2. Install ftl-suite `npm install ftl-suite --save-dev`\r\n3. Start services `[PORT=80] node node_modules/ftl-suite`\r\n\r\n## Feature\r\n1. Render FTLs in local server without IDE\r\n2. Analog data based on interface documentation, parallel development with back-end\r\n3. Proxy Ajax to the remote server\r\n4. URL Rewrite\r\n5. Restore the online environment perfectly\r\n\r\n## Configurations\r\nWhen you start the service for the first time, ftl-suite will create a config file named **fsconfig.json**. You can edit it directly or visit http://127.0.0.1/mockadmin/ (Add the Port if it is not 80)\r\n\r\nDefault config:\r\n```\r\n{\r\n    ftlRoot: 'ftl',\r\n    remoteHost: '',\r\n    proxyPrefix: '',\r\n    proxyList: [],\r\n    route: {},\r\n    globalData: {}\r\n}\r\n```\r\n\r\n### ftlRoot\r\nfreemarker root folder, e.g.\r\n```\r\nftl\r\n../main/ftl\r\n....\r\n```\r\n\r\n### remoteHost\r\nAjax remote server, Support URL and IP, e.g.\r\n```\r\nxx.com\r\nhttp://xx.com\r\nhttps://xx.com\r\n123.123.123.123\r\nhttp://123.123.123.123\r\n....\r\n```\r\n\r\n### proxyPrefix\r\nPrefix of proxy URL, e.g.\r\n```\r\nsingle:\r\napi => /api/xxx/xxx\r\najax => /ajax/xxx/xxx\r\n\r\nmultiple:\r\n(api|ajax) => /(api|ajax)/xxx/xxx\r\n```\r\n\r\n### proxyList\r\nCustomize URLs need to proxy, e.g.\r\n```\r\n[\r\n    \"/api/login/info\",\r\n    \"/api/login/check\"\r\n]\r\n```\r\n\r\n### route\r\nURL Rewrite map, e.g.\r\n```\r\n{\r\n    \"/user/home\": \"/html/user/home/main.html\"\r\n}\r\n```\r\n\r\n**You can edit all configurations by visiting http://127.0.0.1/mockadmin/**\r\n\r\n## Rendering\r\nWhen you visit an URL in browser, the service will find the appropriate FTL, rendering from a json file in the same path in \"mock/data\".\r\n\r\ne.g.\r\n\r\n```\r\nvisit: /main/index.html\r\nftl: /ftl/main/index.ftl\r\ndata: /mock/data/main/index.json\r\n```\r\n\r\nNote:\r\n\r\n1. Prefixed with \"static|src|mock|html?|tools?\" will return static files\r\n2. To avoid errors, it is recommended to use the \"mockadmin\" to edit configuration\r\n3. Create Date Model like: \"2017-01-01 00:00:00?dt\"\r\n\r\n## MIT License\r\n\r\nCopyright (c) 2017\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.",
+  "readmeFilename": "README.md",
+  "gitHead": "6afe8e497d2bbda924346f9580d15a7252115551",
+  "_id": "ftl-suite@1.1.1",
+  "_shasum": "0b3bce0ed47bb278b7544bf0fd5aa9b3f16b7000",
+  "_from": "ftl-suite@>=1.1.1 <2.0.0"
 }
