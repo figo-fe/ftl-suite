@@ -17,14 +17,16 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>URL</th>
+                                <th>URL(No parameters)</th>
                                 <th>origin</th>
+                                <th width="50">delete</th>
                             </tr>
                         </thead>
                         <tbody id="list">
                             <tr>
                                 <td><input type="text" placeholder="e.g. /user/home" class="form-control"></td>
                                 <td><input type="text" placeholder="e.g. /html/user/home/main.html" class="form-control"></td>
+                                <td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -50,6 +52,7 @@ $.get('/fsconfig.json', function(data){
         trList += '<tr>'+
             '<td><input type="text" value="'+ url +'" placeholder="e.g. /user/home" class="form-control"></td>'+
             '<td><input type="text" value="'+ route[url] +'" placeholder="e.g. /html/user/home/main.html" class="form-control"></td>'+
+            '<td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>'+
         '</tr>';
     }
 
@@ -60,7 +63,12 @@ $('#add').on('click',function(){
     $list.append('<tr>'+
         '<td><input type="text" placeholder="e.g. /user/home" class="form-control"></td>'+
         '<td><input type="text" placeholder="e.g. /html/user/home/main.html" class="form-control"></td>'+
+        '<td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>'+
     '</tr>');
+});
+
+$('#list').on('click', '.delete', function(){
+    $(this).parents('tr').remove();
 });
 
 $('#save').on('click', function(){

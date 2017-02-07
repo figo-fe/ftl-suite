@@ -15,8 +15,17 @@
             <div class="box box-primary">
                 <div class="box-body">
                     <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>URL(No parameters)</th>
+                                <th width="50">delete</th>
+                            </tr>
+                        </thead>
                         <tbody id="list">
-                            <tr><td><input type="text" placeholder="e.g. /api/login/info.do" class="form-control"></td></tr>
+                            <tr>
+                                <td><input type="text" placeholder="e.g. /api/login/info.do" class="form-control"></td>
+                                <td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -40,6 +49,7 @@ $.get('/fsconfig.json', function(data){
     arr.forEach(function(url){
         trList += '<tr>'+
             '<td><input type="text" value="'+ url +'" placeholder="e.g. /api/login/info.do" class="form-control"></td>'+
+            '<td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>'+
         '</tr>';
     });
 
@@ -47,7 +57,11 @@ $.get('/fsconfig.json', function(data){
 },'json');
 
 $('#add').on('click',function(){
-    $list.append('<tr><td><input type="text" placeholder="e.g. /api/login/info.do" class="form-control"></td></tr>');
+    $list.append('<tr><td><input type="text" placeholder="e.g. /api/login/info.do" class="form-control"></td><td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td></tr>');
+});
+
+$('#list').on('click', '.delete', function(){
+    $(this).parents('tr').remove();
 });
 
 $('#save').on('click', function(){
