@@ -37,7 +37,7 @@ You can make urlRewrite for all requests, you can also use this to mock ajax loc
 {
     "/user/home": "/html/user/home/main.html",
     "/api/user/\?id=(\d+)": "http://server/api/user/?id=$1",
-    "/ajax/getList/?type=(\w+)": "/mock/ajax/getlist_$1.json"
+    "/ajax/getList/\?id=(\d+)&type=(\w+)": "/mock/ajax/getlist_$1_$2.json"
     
 }
 ```
