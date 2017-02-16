@@ -1,6 +1,6 @@
 {
   "name": "ftl-suite",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Enjoying Freemarker Development",
   "main": "index.js",
   "scripts": {

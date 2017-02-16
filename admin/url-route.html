@@ -17,16 +17,19 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>URL(No parameters)</th>
-                                <th>origin</th>
-                                <th width="50">delete</th>
+                                <th>URL(RegExp)</th>
+                                <th>Route</th>
+                                <th width="100">Handle</th>
                             </tr>
                         </thead>
                         <tbody id="list">
                             <tr>
                                 <td><input type="text" placeholder="e.g. /user/home" class="form-control"></td>
                                 <td><input type="text" placeholder="e.g. /html/user/home/main.html" class="form-control"></td>
-                                <td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>
+                                <td align="center">
+                                    <button type="button" class="btn moveup" title="moveup"><i class="fa fa-arrow-up"></i></button>
+                                    <button type="button" class="btn delete" title="delete"><i class="fa fa-times"></i></button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -52,7 +55,10 @@ $.get('/fsconfig.json', function(data){
         trList += '<tr>'+
             '<td><input type="text" value="'+ url +'" placeholder="e.g. /user/home" class="form-control"></td>'+
             '<td><input type="text" value="'+ route[url] +'" placeholder="e.g. /html/user/home/main.html" class="form-control"></td>'+
-            '<td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>'+
+            '<td align="center">'+
+                '<button type="button" class="btn moveup" title="moveup"><i class="fa fa-arrow-up"></i></button>&nbsp;'+
+                '<button type="button" class="btn delete" title="delete"><i class="fa fa-times"></i></button>'+
+            '</td>'+
         '</tr>';
     }
 
@@ -63,13 +69,27 @@ $('#add').on('click',function(){
     $list.append('<tr>'+
         '<td><input type="text" placeholder="e.g. /user/home" class="form-control"></td>'+
         '<td><input type="text" placeholder="e.g. /html/user/home/main.html" class="form-control"></td>'+
-        '<td align="center"><button type="button" class="btn delete"><i class="fa fa-times"></i></button></td>'+
+        '<td align="center">'+
+            '<button type="button" class="btn moveup" title="moveup"><i class="fa fa-arrow-up"></i></button>&nbsp;'+
+            '<button type="button" class="btn delete" title="delete"><i class="fa fa-times"></i></button>'+
+        '</td>'+
     '</tr>');
 });
 
-$('#list').on('click', '.delete', function(){
-    $(this).parents('tr').remove();
-});
+$('#list')
+    .on('click', '.delete', function(){
+        $(this).parents('tr').remove();
+    })
+    .on('click', '.moveup', function(){
+        var $tr = $(this).parents('tr');
+        var $prev = $tr.prev();
+        if($tr.index() != 0){
+            $prev.before($tr.clone());
+            $tr.remove();
+        }else{
+            alert('Already at the top!');
+        }
+    });
 
 $('#save').on('click', function(){
     var data = {}, cont, urlErr;
@@ -88,7 +108,7 @@ $('#save').on('click', function(){
         return;
     }
     fsconfig.route = data;
-    if(confirm('Confirm the following data:\n' + JSON.stringify(data, null, 4))){
+    if(confirm('Confirm the changes')){
         $.post('/fsapi/savefile',{
             path: '/fsconfig.json',
             cont: JSON.stringify(fsconfig, null, 4)
