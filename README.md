@@ -19,9 +19,9 @@ When you start service for the first time, ftl-suite will create a config file n
 Default config:
 ```
 {
-    ftlRoot: 'ftl',
-    route: {},
-    globalData: {}
+    "ftlRoot": "ftl",
+    "route": {},
+    "globalData": {}
 }
 ```
 
