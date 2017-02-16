@@ -1,4 +1,4 @@
-#Freemarker Development Suite (ftl-suite)
+# Freemarker Development Suite (ftl-suite)
 > Make freemarker development efficiently and conveniently
 
 ## How to use? Only 3 steps!
@@ -59,7 +59,7 @@ data: /mock/data/main/index.json
 
 Note:
 
-1. Prefixed with "static|src|mock|html?|tools?" will return static files
+1. Prefixed with "static,src,mock,htm,html,tool,tools" will return static files
 2. To avoid errors, it is recommended to use the "mockadmin" to edit configuration
 3. Create Date Model like: "2017-01-01 00:00:00?dt"
 
