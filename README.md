@@ -10,19 +10,16 @@
 1. Render FTLs in local server without IDE
 2. Analog data based on interface documentation, parallel development with back-end
 3. Proxy Ajax to the remote server
-4. URL Rewrite
+4. Super Route
 5. Restore the online environment perfectly
 
 ## Configurations
-When you start the service for the first time, ftl-suite will create a config file named **fsconfig.json**. You can edit it directly or visit http://127.0.0.1/mockadmin/ (Add the Port if it is not 80)
+When you start service for the first time, ftl-suite will create a config file named **fsconfig.json**. You can edit it directly or visit http://127.0.0.1[:port]/mockadmin/
 
 Default config:
 ```
 {
     ftlRoot: 'ftl',
-    remoteHost: '',
-    proxyPrefix: '',
-    proxyList: [],
     route: {},
     globalData: {}
 }
@@ -31,51 +28,23 @@ Default config:
 ### ftlRoot
 freemarker root folder, e.g.
 ```
-ftl
-../main/ftl
-....
-```
-
-### remoteHost
-Ajax remote server, Support URL and IP, e.g.
-```
-xx.com
-http://xx.com
-https://xx.com
-123.123.123.123
-http://123.123.123.123
-....
-```
-
-### proxyPrefix
-Prefix of proxy URL, e.g.
-```
-single:
-api => /api/xxx/xxx
-ajax => /ajax/xxx/xxx
-
-multiple:
-(api|ajax) => /(api|ajax)/xxx/xxx
-```
-
-### proxyList
-Customize URLs need to proxy, e.g.
-```
-[
-    "/api/login/info",
-    "/api/login/check"
-]
+"ftl" or "../main/ftl" etc.
 ```
 
 ### route
-URL Rewrite map, e.g.
+You can make urlRewrite for all requests, you can also use this to mock ajax local data or proxy to remote server.It is an amazing super router!
 ```
 {
-    "/user/home": "/html/user/home/main.html"
+    "/user/home": "/html/user/home/main.html",
+    "/api/user/\?id=(\d+)": "http://server/api/user/?id=$1",
+    "/ajax/getList/?type=(\w+)": "/mock/ajax/getlist_$1.json"
+    
 }
 ```
+Note: Using RegExp as matching rules. You should escape the special characters except "/", such as "?". See more details in "index.js" at line 62.
 
-**You can edit all configurations by visiting http://127.0.0.1/mockadmin/**
+### globalData
+Global data for all FreeMarker templates
 
 ## Rendering
 When you visit an URL in browser, the service will find the appropriate FTL, rendering from a json file in the same path in "mock/data".

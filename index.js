@@ -15,9 +15,6 @@ var port = process.env.PORT || 9090;
 
 var defaultCfg = {
     ftlRoot: 'ftl',
-    remoteHost: '',
-    proxyPrefix: '',
-    proxyList: [],
     route: {},
     globalData: {}
 };
@@ -49,27 +46,31 @@ try{
 }catch(e){}
 
 var server = http.createServer(function(req, res){
-    var urlpath = url.parse(req.url).path;
-    var pathname = urlpath.split('?')[0];
+    var urlPath = url.parse(req.url).path;
     var config = JSON.parse(fs.readFileSync(configPath, {encoding:'utf8'}));
     var fm = new Freemarker({viewRoot: path.join(rootPath, config.ftlRoot)});
     var route = config.route;
-    var remoteHost = config.remoteHost, realPath;
+    var pathname, realPath, urlReplaced;
 
-    /\/$/.test(pathname) && (pathname += 'index.html');
+    // fix favicon.ico request
+    if(urlPath == '/favicon.ico'){
+        res.end('');
+        return;
+    }
 
-    for(var key in route){
-        if(pathname.indexOf(key) == 0){
-            pathname = route[key];
+    // route
+    for(var urlReg in route){
+        urlReplaced = route[urlReg]; 
+        urlReg = new RegExp('^'+ urlReg.replace(/\//g,'\/') +'$');
+        if(urlReg.test(urlPath)){
+            urlPath = urlPath.replace(urlReg, urlReplaced);
             break;
         }
     }
 
-    // fix favicon.ico request
-    if(pathname == '/favicon.ico'){
-        res.end('');
-        return;
-    }
+    pathname = urlPath.split('?')[0];
+
+    /\/$/.test(pathname) && (pathname += 'index.html');
 
     // ftl-suite api
     if(pathname.indexOf('/fsapi/') == 0){
@@ -84,7 +85,7 @@ var server = http.createServer(function(req, res){
                 break;
             case '/fsapi/filelist':
                 (function(){
-                    var rootDir = urlpath.match(/dir=([^&]+)/)[1];
+                    var rootDir = urlPath.match(/dir=([^&]+)/)[1];
                     glob('**/*.json',{
                         cwd: path.join(rootPath, rootDir),
                         nodir: true
@@ -102,15 +103,10 @@ var server = http.createServer(function(req, res){
     }
 
     // remote
-    if(config.proxyPrefix && new RegExp('^\/'+ config.proxyPrefix +'\/').test(pathname) || config.proxyList.indexOf(pathname) >= 0){
-        if(!remoteHost){
-            res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
-            res.end('{"code":500,"msg":"remoteHost is not set in fsconfig.json"}');
-        }
-        remoteHost = remoteHost.indexOf('http') == 0 ? remoteHost : ('http://' + remoteHost);
+    if(/^https?:\/\//.test(urlPath)){
 
         if(req.method == 'GET'){
-            httphelper.get(remoteHost  + urlpath, 5000, function (err, data){
+            httphelper.get(urlPath, 5000, function (err, data){
                 if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
                     res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
                 }
@@ -119,9 +115,9 @@ var server = http.createServer(function(req, res){
                 'User-Agent': req['headers']['user-agent'],
                 'Cookie': req.headers.cookie || ''
             });
-        }else{
+        }else if(req.method == 'POST'){
             bodyParse(req, function(postData){
-                httphelper.post(remoteHost  + urlpath, 10000, postData, function (err, data){
+                httphelper.post(urlPath, 10000, postData, function (err, data){
                     if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
                         res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
                     }
