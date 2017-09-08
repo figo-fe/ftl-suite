@@ -139,7 +139,7 @@ var server = http.createServer(function(req, res){
             realPath = path.join(rootPath, pathname);
         }
         readstatic(realPath, function(ret){
-            res.writeHead(ret.code, {'Content-Type': ret.mime});
+            res.writeHead(ret.code, {'Content-Type': ret.mime + '; charset=UTF-8'});
             res.end(ret.data);
         });
     }else{
