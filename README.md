@@ -14,7 +14,7 @@
 5. Restore the online environment perfectly
 
 ## Configurations
-When you start service for the first time, ftl-suite will create a config file named **fsconfig.json**. You can edit it directly or visit http://127.0.0.1[:port]/mockadmin/
+When you start service for the first time, ftl-suite will create a config file named **fsconfig.json**. You can edit it directly or visit http://127.0.0.1[:port]/_tools/
 
 Default config:
 ```
@@ -60,8 +60,9 @@ data: /mock/data/main/index.json
 Note:
 
 1. Prefixed with "static,src,mock,htm,html,tool,tools" will return static files
-2. To avoid errors, it is recommended to use the "mockadmin" to edit configuration
-3. Create Date Model like: "2017-01-01 00:00:00?dt"
+2. To avoid errors, it is recommended to use the "_tools" to edit configuration
+3. Java SimpleDateFormat is not supported when mock data.
+
 
 ## MIT License
 
