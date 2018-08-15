@@ -1,0 +1,45 @@
+.form-control{
+    height: 29px;
+}
+.btn{
+    padding: 3px 8px;
+}
+.well{
+    background: #fff;
+}
+h3{
+    margin-top: 0;
+}
+.modal-dialog{
+    margin-top: 100px;
+}
+.compact div a img{
+    width: 200px;
+    height: 100px;
+}
+.label{
+    font-weight: 400;
+}
+#jsonEditorBox .box{
+    position: relative;
+}
+.openace{
+    width: 12px;
+    height: 50px;
+    line-height: 50px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-left: none;
+    position: absolute;
+    top: 15px;
+    right: -12px;
+    text-align: center;
+}
+#editorHolder a img {
+    max-width: 200px;
+    max-height: 100px;
+}
+.form-control[type=select2]{
+    background: url(../img/select2bg.png) right repeat;
+    cursor: pointer;
+}

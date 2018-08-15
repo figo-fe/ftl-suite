@@ -1,31 +1,33 @@
-var http = require('http');
-var url = require('url');
-var fs = require('fs');
-var path = require('path');
-var colors = require('colors');
-var qs = require('querystring');
-var glob = require('glob');
-var objExtend = require('extend');
-var rootPath = process.cwd();
-var configPath = path.join(rootPath, 'fsconfig.json');
-var Freemarker = require('./freemarker');
-var httphelper = require('./lib/httphelper');
-var readstatic = require('./lib/readstatic');
-var port = process.env.PORT || 9090;
+const http = require('http');
+const url = require('url');
+const fs = require('fs');
+const path = require('path');
+const colors = require('colors');
+const qs = require('querystring');
+const objExtend = require('extend');
+const glob = require('glob');
+const request = require('superagent');
+const Freemarker = require('freemarker.js');
 
-var defaultCfg = {
+const readstatic = require('./lib/readstatic');
+const rootPath = process.cwd();
+const configPath = path.join(rootPath, 'fsconfig.json');
+
+const port = process.env.PORT || 9090;
+
+const defaultCfg = {
     ftlRoot: 'ftl',
     route: {},
     globalData: {}
 };
 
-var bodyParse = function(req, fn){
-    var arr = [];
+const bodyParse = function(req, fn){
+    let arr = [];
     req.on('data', function(data){
         arr.push(data);
     });
     req.on('end', function(){
-        var data = Buffer.concat(arr).toString(),ret;
+        let data = Buffer.concat(arr).toString(),ret;
         try{
             ret = qs.parse(data);
         }catch(err){
@@ -37,7 +39,9 @@ var bodyParse = function(req, fn){
         fn && fn(ret);
     });
 };
-fs.existsSync(configPath) || fs.writeFile(configPath, JSON.stringify(defaultCfg, null, 4));
+
+// create config file fsconfig.json
+fs.existsSync(configPath) || fs.writeFile(configPath, JSON.stringify(defaultCfg, null, 4), () => {});
 
 try{
     fs.mkdirSync(path.join(rootPath, 'mock'));
@@ -45,21 +49,18 @@ try{
     fs.mkdirSync(path.join(rootPath, 'mock','ajax'));
 }catch(e){}
 
-var server = http.createServer(function(req, res){
-    var urlPath = url.parse(req.url).path;
-    var config = JSON.parse(fs.readFileSync(configPath, {encoding:'utf8'}));
-    var fm = new Freemarker({viewRoot: path.join(rootPath, config.ftlRoot)});
-    var route = config.route;
-    var pathname, realPath, urlReplaced;
+const server = http.createServer(function(req, res){
+    let urlPath = url.parse(req.url).path;
+    let config = JSON.parse(fs.readFileSync(configPath, {encoding:'utf8'}));
+    let fm = new Freemarker({viewRoot: path.join(rootPath, config.ftlRoot)});
+    let route = config.route;
+    let pathname, realPath, urlReplaced;
 
     // fix favicon.ico request
-    if(urlPath == '/favicon.ico'){
-        res.end('');
-        return;
-    }
+    if(urlPath == '/favicon.ico') return res.end('');
 
     // route
-    for(var urlReg in route){
+    for(let urlReg in route){
         urlReplaced = route[urlReg]; 
         urlReg = new RegExp('^'+ urlReg.replace(/\//g,'\/') +'$');
         if(urlReg.test(urlPath)){
@@ -85,7 +86,7 @@ var server = http.createServer(function(req, res){
                 break;
             case '/fsapi/filelist':
                 (function(){
-                    var rootDir = urlPath.match(/dir=([^&]+)/)[1];
+                    let rootDir = urlPath.match(/dir=([^&]+)/)[1];
                     glob('**/*.json',{
                         cwd: path.join(rootPath, rootDir),
                         nodir: true
@@ -105,36 +106,31 @@ var server = http.createServer(function(req, res){
     // remote
     if(/^https?:\/\//.test(urlPath)){
 
+        if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
+            res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
+        }
+
         if(req.method == 'GET'){
-            httphelper.get(urlPath, 5000, function (err, data){
-                if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
-                    res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
-                }
-                res.end(err ? 'server error' : data);
-            }, 'utf-8' ,{
-                'User-Agent': req['headers']['user-agent'],
-                'Cookie': req.headers.cookie || ''
-            });
+            request.get(urlPath)
+                .set('User-Agent', req['headers']['user-agent'])
+                .set('Cookie', req.headers.cookie || '')
+                .end((err, resp) => res.end(err ? 'server error' : resp.text));
         }else if(req.method == 'POST'){
             bodyParse(req, function(postData){
-                httphelper.post(urlPath, 10000, postData, function (err, data){
-                    if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
-                        res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
-                    }
-                    res.end(err ? 'server error' : data);
-                }, 'utf-8' ,{
-                    'User-Agent': req['headers']['user-agent'],
-                    'Cookie': req.headers.cookie || ''
-                });
+                request.post(urlPath)
+                    .send(postData)
+                    .set('User-Agent', req['headers']['user-agent'])
+                    .set('Cookie', req.headers.cookie || '')
+                    .end((err, resp) => res.end(err ? 'server error' : resp.text));
             });
         }
         return;
     }
 
     // local
-    if(/^\/(static|src|mock|html?|tools?|mockadmin)\//.test(pathname) || pathname == '/fsconfig.json'){
-        if(pathname.indexOf('/mockadmin/') == 0){
-            realPath = path.join(__dirname, 'admin', pathname.replace(/^\/mockadmin\//, ''));
+    if(/^\/(static|src|mock|html?|tools?|_tools)\//.test(pathname) || pathname == '/fsconfig.json'){
+        if(pathname.indexOf('/_tools/') == 0){
+            realPath = path.join(__dirname, 'tools', pathname.replace(/^\/_tools\//, ''));
         }else{
             realPath = path.join(rootPath, pathname);
         }
@@ -144,9 +140,9 @@ var server = http.createServer(function(req, res){
         });
     }else{
         // render freemarker
-        var ftl = pathname.replace(/\.html?$/,'.ftl');
+        let ftl = pathname.replace(/\.html?$/,'.ftl');
         fs.readFile(path.join(rootPath, 'mock/data', ftl.replace(/\.ftl$/,'.json')), {encoding:'utf8'}, function(err, data){
-            var ftlData = err ? {} : data;
+            let ftlData = err ? {} : data;
             try{
                 ftlData = JSON.parse(ftlData);
             }catch(e){
