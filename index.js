@@ -111,7 +111,7 @@ const server = http.createServer(function(req, res){
     if(/^https?:\/\//.test(urlPath) || /^\/cms\/ajax\//.test(urlPath)){
 
         // 兼容代理CMS接口
-        if(config.cmsDomain.indexOf('http') != 0){
+        if(!/^http/.test(config.cmsDomain)){
             return res.end('Please define cmsDomain of fsconfig.json, like "http://cms.game-test.sogou-inc.com"');
         }
 
