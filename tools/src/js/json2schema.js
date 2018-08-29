@@ -67,6 +67,7 @@ var convert = function(jsonData){
 };
 
 var schemabox = document.getElementById('schema');
+var srcUrl = (location.search.match(/\?u=([^&]+)/) || []).pop();
 
 document.getElementById('jsonCon').onkeyup = _.debounce(function(){
     var data = {};
@@ -79,3 +80,26 @@ document.getElementById('jsonCon').onkeyup = _.debounce(function(){
     }
     
 },500);
+
+// 载入JSON数据
+if(srcUrl){
+    srcUrl = decodeURIComponent(srcUrl);
+    $.get(srcUrl, function(data){
+        try{
+            var json = convert(data);
+            document.getElementById('jsonCon').innerHTML = JSON.stringify(data, null, 4);
+            schemabox.innerHTML = JSON.stringify(json,null,4);
+        }catch(e){
+            schemabox.innerHTML = '请确保输入的json内容符合格式, \n' + e;
+        }
+    })
+}
+
+// Copy schema
+var clipboard = new Clipboard('#copy');
+clipboard.on('success', function(){
+    toast.classList.add('show');
+    setTimeout(function(){
+        toast.classList.remove('show');
+    },2e3)
+})

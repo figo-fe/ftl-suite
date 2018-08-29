@@ -5,7 +5,7 @@
 <title>JSON-Edit</title>
 <link rel="stylesheet" href="src/css/main.css" />
 <link rel="stylesheet" href="src/css/jsoneditor.min.css" />
-<link rel="stylesheet" href="src/css/select2.min.css" />
+<link rel="stylesheet" href="src/css/select2.css" />
 </head>
 <body class="skin-blue sidebar-mini">
 <div class="wrapper">
@@ -23,7 +23,8 @@
                 </div>
                 <div class="box-footer">
                     <button type="button" id="save" class="btn btn-success">save</button>
-                    <button type="button" id="clear" class="btn btn-primary">clear</button>
+                    <button type="button" id="clear" class="btn btn-danger">clear</button>
+                    <button type="button" id="toSchema" class="btn btn-primary">To schema</button>
                 </div>
             </div>
         </div>
@@ -32,7 +33,7 @@
 <script src="src/js/base.js"></script>
 <script src="src/js/main.js"></script>
 <script src="src/js/jsoneditor.min.js"></script>
-<script src="src/js/select2.min.js"></script>
+<script src="src/js/select2.js"></script>
 <script>
 var container = document.getElementById('jsoneditor');
 var options = {
@@ -68,6 +69,10 @@ $('#save').on('click', function(){
     }, function(res){
         alert(res.msg);
     });
+});
+
+$('#toSchema').on('click', function(){
+    location.href = './json2schema.html?u='+encodeURIComponent(jsonFile.value);
 });
 
 $.get('/fsapi/filelist?dir=mock&t='+(+new Date),function(ret){

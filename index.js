@@ -17,6 +17,7 @@ const port = process.env.PORT || 9090;
 
 const defaultCfg = {
     ftlRoot: 'ftl',
+    cmsDomain: '',
     route: {},
     globalData: {}
 };
@@ -87,7 +88,10 @@ const server = http.createServer(function(req, res){
             case '/fsapi/filelist':
                 (function(){
                     let rootDir = urlPath.match(/dir=([^&]+)/)[1];
-                    glob('**/*.json',{
+                    let ext = (urlPath.match(/ext=([^&]+)/) || []).pop() || 'json';
+                    let filter = '**/*.' + ext;
+
+                    glob(filter, {
                         cwd: path.join(rootPath, rootDir),
                         nodir: true
                     }, function(err, files){
@@ -104,7 +108,14 @@ const server = http.createServer(function(req, res){
     }
 
     // remote
-    if(/^https?:\/\//.test(urlPath)){
+    if(/^https?:\/\//.test(urlPath) || /^\/cms\/ajax\//.test(urlPath)){
+
+        // 兼容代理CMS接口
+        if(config.cmsDomain.indexOf('http') != 0){
+            return res.end('Please define cmsDomain of fsconfig.json, like "http://cms.game-test.sogou-inc.com"');
+        }
+
+        urlPath = /^http/.test(urlPath) ? urlPath : (config.cmsDomain + urlPath);
 
         if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
             res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});

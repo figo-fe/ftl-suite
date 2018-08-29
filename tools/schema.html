@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fed Template System</title>
+    <link href="src/css/main.css" rel="stylesheet">
+    <link href="src/css/fededit.css" rel="stylesheet">
+    <link href="src/css/select2.css" rel="stylesheet">
+    <link href="src/css/sceditor.min.css" rel="stylesheet">
+</head>
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+    <div class="content-wrapper content-inner">
+        <div class="content">
+            <div class="row">
+                <div class="col-md-7" id="jsonEditorBox" style="display:none">
+                    <div class="box box-primary">
+                        <a href="" class="openace" id="openAce" title="Toggle Schema"><i class="fa fa-angle-right"></i></a>
+                        <div class="box-body">
+                            <div id="editorHolder" style="overflow:hidden"></div>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-btn">
+                                    <button id="checkMock" class="btn btn-primary btn-flat" title="输出到浏览器console" type="button">Output data to console</button>
+                                    <!-- <button type="button" class="btn btn-primary btn-flat dropdown-toggle" id="dropMenu">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" id="consoleMenu" style="min-width:125px;left:auto;right:0">
+                                        <li><a href="#" class="console-json">Editor.root</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="console-json">JSON-String</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="console-json">JSON-Object</a></li>
+                                    </ul> -->
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" id="schemaBox">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Load Json Schema</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="input-group input-group-sm">
+                                <select class="form-control" id="schemaUrl">--</select>
+                                <span class="input-group-btn"><a href="#" id="loadSchema" class="btn btn-primary">Import Schema</a></span>
+                            </div>
+                            <div id="aceEditor" style="width:100%;height:500px;margin-top:15px"></div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="button" id="loadJsonEditor" class="btn btn-success">Load json-editor</button>
+                            <a target="_blank" href="schema-demo.html" class="btn btn-primary">Schema Demo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="extraCode"></div>
+<script src="src/js/base.js"></script>
+<script src="src/js/ace/ace.js"></script>
+<script src="src/js/json-schema.min.js"></script>
+<script src="src/js/select2.js"></script>
+<script src="src/js/jquery.sceditor.min.js"></script>
+<script src="src/js/underscore.js"></script>
+<script src="src/js/main.js"></script>
+<script src="src/js/fededit.js"></script>
+</body>
+</html>

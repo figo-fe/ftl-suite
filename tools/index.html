@@ -8,7 +8,7 @@
 <body class="skin-blue sidebar-mini">
     <div class="wrapper">
         <header class="main-header">
-            <a href="#" class="logo">
+            <a href="./" class="logo">
                 <span class="logo-mini">Tools</span>
                 <span class="logo-lg">Tools</span>
             </a>
@@ -22,23 +22,23 @@
             <section class="sidebar">
                 <ul class="sidebar-menu" id="menuList">
                     <li class="header">Menu</li>
-                    <li class="active">
+                    <li class="json-editor">
                         <a target="mainFrame" href="json-editor.html">
                             <i class="fa fa-circle-o"></i> <span>JSON-Editor</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="url-route">
                         <a target="mainFrame" href="url-route.html">
                             <i class="fa fa-circle-o"></i> <span>URL-Route</span>
                         </a>
                     </li>
-                    <li>
-                        <a target="_blank" href="/_tools/json2schema/">
+                    <li class="json2schema">
+                        <a target="mainFrame" href="json2schema.html">
                             <i class="fa fa-circle-o"></i> <span>json2schema</span>
                         </a>
                     </li>
-                    <li>
-                        <a target="_blank" href="/_tools/schema/">
+                    <li class="schema schema-demo">
+                        <a target="mainFrame" href="schema.html">
                             <i class="fa fa-circle-o"></i> <span>schema</span>
                         </a>
                     </li>
@@ -64,10 +64,18 @@
         },500)
     });
     reHeight();
-    $('#menuList li').on('click', function(){
-        $('#menuList li').removeClass('active');
-        this.className = 'active';
-    });
+    // $('#menuList li').on('click', function(){
+    //     $('#menuList li').removeClass('active');
+    //     this.className = 'active';
+    // });
+
+    document.getElementById('mainFrame').onload = function(){
+        try{
+            var name = this.contentWindow.location.pathname.replace('/_tools/', '').replace('.html','');
+            $('#menuList li').removeClass('active');
+            $('#menuList li.'+name).addClass('active');
+        }catch(e){}
+    }
 }());
 </script>
 </body>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>json2schema</title>
+<link rel="stylesheet" href="src/css/main.css" />
+<style>
+    body{
+        font-size: 14px;
+        font-family: Verdana,'microsoft yahei';
+        color: #555;
+    }
+    .box-body {
+        height: 560px;
+        padding: 15px;
+    }
+    .box-body .tit {
+        height: 30px;
+        line-height: 30px;
+    }
+    .box-body .nav {
+        width: 420px;
+        height: 520px;
+        float: left;
+        margin-right: 12px;
+    }
+    .box-body .code-box {
+        padding: 10px;
+        height: 500px;
+        border: 1px solid #ddd;
+    }
+    .box-body .code-box textarea {
+        font-family: Verdana;
+        border: none;
+        width: 100%;
+        height: 475px;
+        resize: none;
+        outline: none;
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+        color: #666;
+        line-height: 20px;
+        overflow-y: auto
+    }
+    .info {
+        margin-top: 10px;
+        height: 20px;
+        line-height: 20px;
+        color: #aaa;
+    }
+    #format {
+        cursor: pointer;
+        color: blue;
+    }
+    .toast{
+        width: 150px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 4px;
+        background: #000;
+        color: #fff;
+        text-align: center;
+        font-size: 15px;
+        position: fixed;
+        left: 50%;
+        margin-left: -75px;
+        top: 50%;
+        display: none;
+    }
+    .toast.show{
+        display: block;
+    }
+</style>
+</head>
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+    <div class="content-wrapper content-inner">
+        <section class="content-header">
+            <h1>Json2schema<small>One key JSON to schema</small></h1>
+        </section>
+        <div class="content">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <div class="nav">
+                        <div class="tit"><b>Input JSON</b>
+                        </div>
+                        <div class="code-box">
+                            <textarea id="jsonCon" placeholder="Input JSON data here"></textarea>
+                        </div>
+                    </div>
+                    <div class="nav" style="width:500px">
+                        <div class="tit"><b>Output JSON-schema</b>
+                        </div>
+                        <div class="code-box">
+                            <textarea class="schema" placeholder="Show output JSON-schema" id="schema" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="button" id="copy" class="btn btn-success" data-clipboard-target="#schema">Copy JSON-schema</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="toast" id="toast">Copy Success!</div>
+<script src="src/js/base.js"></script>
+<script src="src/js/main.js"></script>
+<script src="src/js/underscore.js"></script>
+<script src="src/js/clipboard.min.js"></script>
+<script src="src/js/json2schema.js"></script>
+</body>
+</html>

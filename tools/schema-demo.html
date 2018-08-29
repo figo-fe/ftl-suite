@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fed Template System</title>
+    <link href="src/css/main.css" rel="stylesheet">
+    <link href="src/css/fededit.css" rel="stylesheet">
+</head>
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+    <div class="content-wrapper content-inner">
+        <div class="content">
+            <div class="row">
+                <div class="col-md-12" id="schemaBox">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Json Schema Demo</h3>
+                        </div>
+                        <div class="box-body">
+                            <div id="aceEditor" style="width:100%;height:600px;margin-top:15px">
+//json schema 是json结构的描述文件
+//比如
+//  {"name":"figo","age":27} 的json schema为：
+//
+//  {
+//      "title":"person",
+//      "type":"object",
+//      "properties":{
+//          "name":{
+//              "type":"string"
+//          },
+//          "age":{
+//              "type":"integer"
+//          }
+//      }
+//  }
+//  更多信息请参考http://jsonschema.net/
+//  下面是一个比较完整的json schema，包含了array object string number等类型
+//  同时注明一些常用的参数配置和含义，如有疑问请咨询 hanlongfei@sogou-inc.com
+//  eg:
+
+{
+    "title": "游戏排行榜",//title 表单名称
+    "type": "array", //表单类型 array string number object
+    "format": "table", //当type为array时此值有效，表示展示类型 table row tabs
+    "items": { //当类型为array时 需指定items，配置数组中子项参数
+        "type":"object", //对象类型
+        "title":"图片", //依然需要指定title
+        "properties": { //当类型为object时，需指定对象属性
+            "weight": { //字段名
+                "type": "string", //指定类型
+                "propertyOrder": 1, //表单排序,越小越靠前,默认1000
+                "enum": ["1","2","3","4"], //配置后表单为select
+                "default":"1",//表单默认值
+                "options": { //表单参数
+                    "enum_titles": ["a","b","c","d"], //当指定enum时，此值为select显示值
+                    "select2_options": { //select2插件配置
+                        "width": "100px" //指定select宽度
+                    }
+                }
+            },
+            "startTime": {
+                "type": "string", //string类型
+                "format": "datepick", //时间选择控件
+                "description":"开始展示时间" //表单说明
+            },
+            "image":{
+                "type":"string", //string类型
+                "format":"upload" //图片上传控件
+            }
+        }
+    }
+}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="src/js/base.js"></script>
+<script src="src/js/main.js"></script>
+<script src="src/js/ace/ace.js"></script>
+<script>
+    var aceEditor = ace.edit("aceEditor");
+        aceEditor.setTheme("ace/theme/monokai");
+        aceEditor.getSession().setMode("ace/mode/javascript");
+</script>
+</body>
+</html>
