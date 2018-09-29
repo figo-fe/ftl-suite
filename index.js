@@ -139,7 +139,7 @@ const server = http.createServer(function(req, res){
     }
 
     // local
-    if(/^\/(static|src|mock|html?|tools?|_tools)\//.test(pathname) || pathname == '/fsconfig.json'){
+    if(/^\/(static|src|mock|dist|build|html?|tools?|_tools)\//.test(pathname) || pathname == '/fsconfig.json'){
         if(pathname.indexOf('/_tools/') == 0){
             realPath = path.join(__dirname, 'tools', pathname.replace(/^\/_tools\//, ''));
         }else{
