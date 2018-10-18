@@ -18,6 +18,7 @@ const port = process.env.PORT || 9090;
 const defaultCfg = {
     ftlRoot: 'ftl',
     cmsDomain: '',
+    static: 'static|build|dist|mock',
     route: {},
     globalData: {}
 };
@@ -120,18 +121,21 @@ const server = http.createServer(function(req, res){
         if(req.headers['x-requested-with'] == 'XMLHttpRequest'){
             res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
         }
-
         if(req.method == 'GET'){
             request.get(urlPath)
                 .set('User-Agent', req['headers']['user-agent'])
+                .set('Content-Type', req.headers['content-type'] || '')
                 .set('Cookie', req.headers.cookie || '')
+                .set('Accept', req.headers.accept || '')
                 .end((err, resp) => res.end(err ? 'server error' : resp.text));
         }else if(req.method == 'POST'){
             bodyParse(req, function(postData){
                 request.post(urlPath)
                     .send(postData)
                     .set('User-Agent', req['headers']['user-agent'])
+                    .set('Content-Type', req.headers['content-type'] || '')
                     .set('Cookie', req.headers.cookie || '')
+                    .set('Accept', req.headers.accept || '')
                     .end((err, resp) => res.end(err ? 'server error' : resp.text));
             });
         }
@@ -139,7 +143,7 @@ const server = http.createServer(function(req, res){
     }
 
     // local
-    if(/^\/(static|src|mock|dist|build|html?|tools?|_tools)\//.test(pathname) || pathname == '/fsconfig.json'){
+    if(new RegExp('^/('+ config.static +'|_tools)/').test(pathname) || pathname == '/fsconfig.json'){
         if(pathname.indexOf('/_tools/') == 0){
             realPath = path.join(__dirname, 'tools', pathname.replace(/^\/_tools\//, ''));
         }else{
@@ -166,9 +170,9 @@ const server = http.createServer(function(req, res){
     }
 });
 
-console.log(('Started server on http://127.0.0.1:' + port + '...').cyan);
+console.log(('Started server on http://localhost:' + port + '...').cyan);
 
-server.listen(port, '127.0.0.1');
+server.listen(port, '0.0.0.0');
 server.on('error', function(err){
     console.log(err.toString().red);
 });
