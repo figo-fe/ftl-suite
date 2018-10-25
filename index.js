@@ -42,6 +42,25 @@ const bodyParse = function(req, fn){
     });
 };
 
+const handleProxy = function(method, url, req, res, postData){
+    const headers = req['headers'];
+    let proxy = request[method](url).set({
+        'User-Agent': headers['user-agent'],
+        'Content-Type': headers['content-type'] || '',
+        'Cookie': headers['cookie'] || '',
+        'Accept': headers['accept'] || '',
+    });
+
+    if(method == 'post'){
+        proxy = proxy.send(postData || {})
+    }
+
+    proxy.end((err, resp) => {
+        res.writeHead(resp.status, resp.headers);
+        res.end(resp.text)
+    });
+};
+
 // create config file fsconfig.json
 fs.existsSync(configPath) || fs.writeFile(configPath, JSON.stringify(defaultCfg, null, 4), () => {});
 
@@ -122,21 +141,10 @@ const server = http.createServer(function(req, res){
             res.writeHead(200, {'Content-Type' : 'application/json; charset=UTF-8'});
         }
         if(req.method == 'GET'){
-            request.get(urlPath)
-                .set('User-Agent', req['headers']['user-agent'])
-                .set('Content-Type', req.headers['content-type'] || '')
-                .set('Cookie', req.headers.cookie || '')
-                .set('Accept', req.headers.accept || '')
-                .end((err, resp) => res.end(err ? 'server error' : resp.text));
+            handleProxy('get', urlPath, req, res);
         }else if(req.method == 'POST'){
             bodyParse(req, function(postData){
-                request.post(urlPath)
-                    .send(postData)
-                    .set('User-Agent', req['headers']['user-agent'])
-                    .set('Content-Type', req.headers['content-type'] || '')
-                    .set('Cookie', req.headers.cookie || '')
-                    .set('Accept', req.headers.accept || '')
-                    .end((err, resp) => res.end(err ? 'server error' : resp.text));
+                handleProxy('post', urlPath, req, res, postData);
             });
         }
         return;
