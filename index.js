@@ -29,9 +29,18 @@ const bodyParse = function(req, fn){
         arr.push(data);
     });
     req.on('end', function(){
-        let data = Buffer.concat(arr).toString(),ret;
-        try{
-            ret = qs.parse(data);
+        const bufferArr = Buffer.concat(arr);
+        let data = bufferArr.toString(),
+            ret;
+        const contentType = req['headers']['content-type'];
+        try {
+            if (contentType.indexOf('multipart/form-data') > -1) {
+                ret = bufferArr;
+            } else if (contentType.indexOf('application/json') > -1) {
+                ret = data;
+            } else {
+                ret = qs.parse(data);
+            }
         }catch(err){
             ret = {
                 code: 500,
